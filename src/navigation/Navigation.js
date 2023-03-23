@@ -10,11 +10,14 @@ import SignupScreen from "../screens/Auth/SignupScreen";
 import WelcomeScreen from "../screens/Welcome/WelcomeScreen";
 
 import { Colors } from "../constants/styles";
+import { newColors } from "../constants/colors";
 
 import AuthContentProvider, { AuthContext } from "../store/auth-context";
 import IconButton from "../components/ui/IconButton";
 
 import AppLoading from "expo-app-loading";
+import AllPlaces from "../screens/Favorite/AllPlaces";
+import AddPlace from "../screens/Favorite/AddPlace";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,11 +41,41 @@ function AuthenticatedStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: "white",
-        contentStyle: { backgroundColor: Colors.primary100 },
+        headerStyle: { backgroundColor: newColors.primary500 },
+        headerTintColor: newColors.gray700,
+        contentStyle: { backgroundColor: newColors.gray700 },
       }}
     >
+      <Stack.Screen
+        name="AllPlaces"
+        component={AllPlaces}
+        options={({ navigation }) => ({
+          title: "Your Favorite Places",
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="add"
+              color={tintColor}
+              size={24}
+              onPress={() => navigation.navigate("AddPlace")}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="AddPlace"
+        component={AddPlace}
+        options={{
+          title: "Add a new Place",
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="exit"
+              color={tintColor}
+              size={24}
+              onPress={authCtx.logout}
+            />
+          ),
+        }}
+      />
       <Stack.Screen
         name="Welcome"
         component={WelcomeScreen}
