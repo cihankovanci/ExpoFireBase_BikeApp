@@ -18,6 +18,7 @@ import IconButton from "../components/ui/IconButton";
 import AppLoading from "expo-app-loading";
 import AllPlaces from "../screens/Favorite/AllPlaces";
 import AddPlace from "../screens/Favorite/AddPlace";
+import Map from "../screens/Favorite/Map";
 
 const Stack = createNativeStackNavigator();
 
@@ -76,6 +77,7 @@ function AuthenticatedStack() {
           ),
         }}
       />
+      <Stack.Screen name="Map" component={Map} />
       <Stack.Screen
         name="Welcome"
         component={WelcomeScreen}
