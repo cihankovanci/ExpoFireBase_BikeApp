@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, View, Alert, Image, Text } from "react-native";
 import {
   getCurrentPositionAsync,
@@ -8,14 +8,33 @@ import {
 import OutlinedButton from "../ui/OutlinedButton";
 import { newColors } from "../../constants/colors";
 import { getMapPreiew } from "../../util/location";
-import { useNavigation } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+  useIsFocused,
+} from "@react-navigation/native";
 
 function LocationPicker() {
   const [pickedLocation, setPickedLocation] = useState();
 
+  const isFocused = useIsFocused();
+
   const navigation = useNavigation();
+  const route = useRoute();
+
   const [locationPermissionInformation, requestPermission] =
     useForegroundPermissions();
+
+  useEffect(() => {
+    if (isFocused && route.params) {
+      const mapPickedLocation = {
+        lat: route.params.pickedLat,
+        lng: route.params.pickedLng,
+      }; //if there is any data coming from route.params it is going to be on mapPickedLocation. İf there is none there wont be any data
+      setPickedLocation(mapPickedLocation);
+    }
+  }, [route, isFocused]);
+
   async function verifyPermissions() {
     if (
       locationPermissionInformation.status === PermissionStatus.UNDETERMINED
