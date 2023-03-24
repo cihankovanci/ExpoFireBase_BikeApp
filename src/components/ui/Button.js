@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { newColors } from "../../constants/colors";
 
 import { Colors } from "../../constants/styles";
 
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingVertical: 6,
     paddingHorizontal: 12,
-    backgroundColor: Colors.primary500,
+    backgroundColor: newColors.primary800,
     elevation: 2,
     shadowColor: "black",
     shadowOffset: { width: 1, height: 1 },
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: "center",
-    color: "white",
+    color: newColors.primary50,
     fontSize: 16,
     fontWeight: "bold",
   },
