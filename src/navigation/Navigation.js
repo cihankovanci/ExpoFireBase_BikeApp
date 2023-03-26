@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import * as SplashScreen from "expo-splash-screen";
 import LoginScreen from "../screens/Auth/LoginScreen";
 
 import SignupScreen from "../screens/Auth/SignupScreen";
@@ -19,6 +21,7 @@ import AppLoading from "expo-app-loading";
 import AllPlaces from "../screens/Favorite/AllPlaces";
 import AddPlace from "../screens/Favorite/AddPlace";
 import Map from "../screens/Favorite/Map";
+import { init } from "../util/database";
 
 const Stack = createNativeStackNavigator();
 
@@ -96,17 +99,17 @@ function AuthenticatedStack() {
   );
 }
 
-function Navigation() {
+function Navigation({ onLayoutRootView }) {
   const authCtx = useContext(AuthContext);
   return (
-    <NavigationContainer>
+    <NavigationContainer onReady={onLayoutRootView}>
       {!authCtx.isAuthenticated && <AuthStack />}
       {authCtx.isAuthenticated && <AuthenticatedStack />}
     </NavigationContainer>
   );
 }
 
-function Root() {
+function Root({ onLayoutRootView }) {
   const [isTryingLogin, setisTryingLogin] = useState(true);
   const authCtx = useContext(AuthContext);
 
@@ -124,18 +127,44 @@ function Root() {
   }, []);
 
   if (isTryingLogin) {
-    return <AppLoading />;
+    return (
+      <View>
+        <Text>wadaw</Text>
+      </View>
+    );
   }
 
-  return <Navigation />;
+  return <Navigation onLayoutRootView={onLayoutRootView} />;
 }
 
 export default function NavigationComponent() {
+  const [dbInitialized, setDbInitialized] = useState(false);
+  useEffect(() => {
+    const prepare = async () => {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        init();
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setDbInitialized(true);
+      }
+    };
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (dbInitialized) {
+      await SplashScreen.hideAsync();
+    }
+  }, [dbInitialized]);
+
+  if (!dbInitialized) return null;
   return (
     <>
       <StatusBar style="light" />
       <AuthContentProvider>
-        <Root />
+        <Root onLayoutRootView={onLayoutRootView} />
       </AuthContentProvider>
     </>
   );
