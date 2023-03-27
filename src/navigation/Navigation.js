@@ -22,6 +22,7 @@ import AllPlaces from "../screens/Favorite/AllPlaces";
 import AddPlace from "../screens/Favorite/AddPlace";
 import Map from "../screens/Favorite/Map";
 import { init } from "../util/database";
+import PlaceDetails from "../screens/Favorite/PlaceDetails";
 
 const Stack = createNativeStackNavigator();
 
@@ -81,6 +82,13 @@ function AuthenticatedStack() {
         }}
       />
       <Stack.Screen name="Map" component={Map} />
+      <Stack.Screen
+        name="PlaceDetails"
+        component={PlaceDetails}
+        options={{
+          title: "Loading Place...",
+        }}
+      />
       <Stack.Screen
         name="Welcome"
         component={WelcomeScreen}
